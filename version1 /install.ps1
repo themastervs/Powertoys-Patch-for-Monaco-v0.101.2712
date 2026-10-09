@@ -1,0 +1,6 @@
+# Definir las rutas base de destino y origen (usando ruta absoluta)
+$pt = Join-Path $env:LOCALAPPDATA "PowerToys"
+$build = Join-Path $PSScriptRoot "Powertoys Patch for Monaco\vo.101.2712\v1 minimal"
+
+# Copiar el archivo ejecutable reemplazando el original
+Copy-Item "$build\PyPreviewHost2.exe" "$pt\PowerToys.MonacoPreviewHandler.exe" -Force
