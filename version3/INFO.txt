@@ -1,5 +1,10 @@
 # PyPreviewHost2
 
+*By default powertoys just uses Monaco in some files, that is limited by the app itself. If you want to use this patch with files which are not included you shall change de .reg shellex*
+
+
+
+
 Previsualizador universal (texto, código, configuración, binarios) para el panel de vista previa de PowerToys.
 C# / WPF / .NET Framework 4.8 / x64. Única dependencia: AvalonEdit 6.3.1.120 (licencia MIT).
 
