@@ -45,7 +45,7 @@ Resaltado desactivado para texto > 2 M caracteres o líneas > 20 000 caracteres.
 ## Limitaciones conocidas
 - Resaltado léxico: HTML no resalta JS/CSS incrustado; JS no distingue literales regex; .m se trata como MATLAB.
 - Barras de desplazamiento con el estilo WPF por defecto (no oscuras).
-- Estado de verificación: código revisado, NO compilado ni probado dentro de PowerToys.
+- Estado de verificación: probado y funcionando en Powertoys W11 (version nombrada)
 
 ## Licencias
 AvalonEdit: MIT (ver el LICENSE del paquete NuGet para el aviso de copyright exacto).
