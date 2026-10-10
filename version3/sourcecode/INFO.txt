@@ -1,0 +1,46 @@
+# PyPreviewHost2
+
+Previsualizador universal (texto, código, configuración, binarios) para el panel de vista previa de PowerToys.
+C# / WPF / .NET Framework 4.8 / x64. Única dependencia: AvalonEdit 6.3.1.120 (licencia MIT).
+
+## Compilar
+    msbuild PyPreviewHost2.csproj -restore -p:Configuration=Release -p:Platform=x64
+Salida: bin\x64\Release\PyPreviewHost2.exe
+
+## Contrato de lanzamiento (sin cambios respecto al original)
+    PyPreviewHost2.exe <ruta-del-archivo> <HWND-padre-en-hexadecimal-sin-0x>
+Códigos de salida: 1 = faltan argumentos, 2 = HWND inválido, 99 = error fatal
+(detalle en %TEMP%\PyPreviewHost2-error.txt).
+Añadido: el hijo se redimensiona al área cliente del padre (sondeo cada 100 ms) y el proceso termina
+si el padre desaparece. Desactivable con autoResizeToParent=false.
+
+## Atajos / menú contextual
+Ctrl+H texto<->hex · Ctrl+W ajuste de línea (visual) · Ctrl+L números de línea · Ctrl+ +/-/0 tamaño de fuente
+Hex: arrastrar para seleccionar, Ctrl+C copia bytes (o ASCII si se empezó en la columna ASCII),
+menú: copiar hex / ASCII / volcado / offset, ir a inicio/fin, bytes por fila (8/16/24/32).
+
+## Configuración opcional
+%LOCALAPPDATA%\PyPreviewHost2\settings.ini: wordWrap, lineNumbers, fontSize, bytesPerRow,
+maxTextBytes (64 KiB–32 MiB, def. 8 MiB), autoResizeToParent, fontFamily.
+
+## Detección de codificación (determinista)
+BOM (UTF-8/16/32) -> UTF-16 sin BOM por patrón de NULs (marcado [guess]) -> UTF-8 estricto
+(o mayoritariamente válido) -> página de códigos ANSI del sistema (marcada [guess]).
+NULs o muchos caracteres de control = binario (nunca se decodifica como texto).
+Archivos > maxTextBytes: se muestra el principio, cortado en límite de línea, marcado PARTIAL.
+Resaltado desactivado para texto > 2 M caracteres o líneas > 20 000 caracteres.
+
+## Formatos
+- Texto/código/config: ver catálogo en Core.cs (FormatCatalog); ~45 definiciones léxicas (no semánticas).
+- Lectores especializados (solo metadatos, nada se ejecuta ni se extrae): PE, ZIP/JAR/DOCX…, ELF (cabecera),
+  SQLite (solo cabecera, sin esquemas), clase Java (nombre/versión), gzip.
+- Solo hex (sin parser): PDF, 7z, RAR, TAR, WASM, pyc, .obj/.lib/.pdb, etc.
+- Para añadir un lector: implementar IPreviewReader y registrarlo en ReaderRegistry.CreateDefault().
+
+## Limitaciones conocidas
+- Resaltado léxico: HTML no resalta JS/CSS incrustado; JS no distingue literales regex; .m se trata como MATLAB.
+- Barras de desplazamiento con el estilo WPF por defecto (no oscuras).
+- Estado de verificación: código revisado, NO compilado ni probado dentro de PowerToys.
+
+## Licencias
+AvalonEdit: MIT (ver el LICENSE del paquete NuGet para el aviso de copyright exacto).
