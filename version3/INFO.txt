@@ -1,51 +1,50 @@
 # PyPreviewHost2
 
-*By default powertoys just uses Monaco in some files, that is limited by the app itself. If you want to use this patch with files which are not included you shall change de .reg shellex*
+*By default PowerToys just uses Monaco in some files, that is limited by the app itself. If you want to use this patch with files which are not included you shall change the .reg shellex*
 
 
 
+Universal previewer (text, code, configuration, binaries) for the PowerToys preview pane.
+C# / WPF / .NET Framework 4.8 / x64. Only dependency: AvalonEdit 6.3.1.120 (MIT license).
 
-Previsualizador universal (texto, código, configuración, binarios) para el panel de vista previa de PowerToys.
-C# / WPF / .NET Framework 4.8 / x64. Única dependencia: AvalonEdit 6.3.1.120 (licencia MIT).
-
-## Compilar
+## Build
     msbuild PyPreviewHost2.csproj -restore -p:Configuration=Release -p:Platform=x64
-Salida: bin\x64\Release\PyPreviewHost2.exe
+Output: bin\x64\Release\PyPreviewHost2.exe
 
-## Contrato de lanzamiento (sin cambios respecto al original)
-    PyPreviewHost2.exe <ruta-del-archivo> <HWND-padre-en-hexadecimal-sin-0x>
-Códigos de salida: 1 = faltan argumentos, 2 = HWND inválido, 99 = error fatal
-(detalle en %TEMP%\PyPreviewHost2-error.txt).
-Añadido: el hijo se redimensiona al área cliente del padre (sondeo cada 100 ms) y el proceso termina
-si el padre desaparece. Desactivable con autoResizeToParent=false.
+## Launch contract (unchanged from the original)
+    PyPreviewHost2.exe <file-path> <parent-HWND-in-hex-without-0x>
+Exit codes: 1 = missing arguments, 2 = invalid HWND, 99 = fatal error
+(details in %TEMP%\PyPreviewHost2-error.txt).
+Added: the child resizes to the parent's client area (polling every 100 ms) and the process terminates
+if the parent disappears. Can be disabled with autoResizeToParent=false.
 
-## Atajos / menú contextual
-Ctrl+H texto<->hex · Ctrl+W ajuste de línea (visual) · Ctrl+L números de línea · Ctrl+ +/-/0 tamaño de fuente
-Hex: arrastrar para seleccionar, Ctrl+C copia bytes (o ASCII si se empezó en la columna ASCII),
-menú: copiar hex / ASCII / volcado / offset, ir a inicio/fin, bytes por fila (8/16/24/32).
+## Shortcuts / context menu
+Ctrl+H text<->hex · Ctrl+W word wrap (visual) · Ctrl+L line numbers · Ctrl+ +/-/0 font size
+Hex: drag to select, Ctrl+C copies bytes (or ASCII if started in the ASCII column),
+menu: copy hex / ASCII / dump / offset, go to start/end, bytes per row (8/16/24/32).
 
-## Configuración opcional
+## Optional configuration
 %LOCALAPPDATA%\PyPreviewHost2\settings.ini: wordWrap, lineNumbers, fontSize, bytesPerRow,
-maxTextBytes (64 KiB–32 MiB, def. 8 MiB), autoResizeToParent, fontFamily.
+maxTextBytes (64 KiB–32 MiB, default 8 MiB), autoResizeToParent, fontFamily.
 
-## Detección de codificación (determinista)
-BOM (UTF-8/16/32) -> UTF-16 sin BOM por patrón de NULs (marcado [guess]) -> UTF-8 estricto
-(o mayoritariamente válido) -> página de códigos ANSI del sistema (marcada [guess]).
-NULs o muchos caracteres de control = binario (nunca se decodifica como texto).
-Archivos > maxTextBytes: se muestra el principio, cortado en límite de línea, marcado PARTIAL.
-Resaltado desactivado para texto > 2 M caracteres o líneas > 20 000 caracteres.
+## Encoding detection (deterministic)
+BOM (UTF-8/16/32) -> UTF-16 without BOM by NUL pattern (marked [guess]) -> strict UTF-8
+(or mostly valid) -> system ANSI code page (marked [guess]).
+NULs or many control characters = binary (never decoded as text).
+Files > maxTextBytes: the beginning is shown, cut at a line boundary, marked PARTIAL.
+Highlighting disabled for text > 2 M characters or lines > 20,000 characters.
 
-## Formatos
-- Texto/código/config: ver catálogo en Core.cs (FormatCatalog); ~45 definiciones léxicas (no semánticas).
-- Lectores especializados (solo metadatos, nada se ejecuta ni se extrae): PE, ZIP/JAR/DOCX…, ELF (cabecera),
-  SQLite (solo cabecera, sin esquemas), clase Java (nombre/versión), gzip.
-- Solo hex (sin parser): PDF, 7z, RAR, TAR, WASM, pyc, .obj/.lib/.pdb, etc.
-- Para añadir un lector: implementar IPreviewReader y registrarlo en ReaderRegistry.CreateDefault().
+## Formats
+- Text/code/config: see catalog in Core.cs (FormatCatalog); ~45 lexical (non-semantic) definitions.
+- Specialized readers (metadata only, nothing is executed or extracted): PE, ZIP/JAR/DOCX…, ELF (header),
+  SQLite (header only, no schemas), Java class (name/version), gzip.
+- Hex only (no parser): PDF, 7z, RAR, TAR, WASM, pyc, .obj/.lib/.pdb, etc.
+- To add a reader: implement IPreviewReader and register it in ReaderRegistry.CreateDefault().
 
-## Limitaciones conocidas
-- Resaltado léxico: HTML no resalta JS/CSS incrustado; JS no distingue literales regex; .m se trata como MATLAB.
-- Barras de desplazamiento con el estilo WPF por defecto (no oscuras).
-- Estado de verificación: probado y funcionando en Powertoys W11 (version nombrada)
+## Known limitations
+- Lexical highlighting: HTML does not highlight embedded JS/CSS; JS does not distinguish regex literals; .m is treated as MATLAB.
+- Scrollbars use the default WPF style (not dark).
+- Verification status: tested and working on PowerToys W11 (named version)
 
-## Licencias
-AvalonEdit: MIT (ver el LICENSE del paquete NuGet para el aviso de copyright exacto).
+## Licenses
+AvalonEdit: MIT (see the LICENSE of the NuGet package for the exact copyright notice).
