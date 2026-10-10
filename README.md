@@ -2,7 +2,7 @@
 
 Replace the PowerToys Monaco preview executable with a custom file viewer, bringing support for additional text formats, structured data, and binary file inspection to Windows File Explorer.
 
-*By default powertoys just uses Monaco in some files, that is limited by the app itself. If you want to use this patch with files which are not included you shall change de .reg shellex* (version 3)
+*By default powertoys just uses Monaco in some files, that is limited by the app itself. If you want to use this patch with files which are not included you shall manually change the .reg shellex* (version 3)
 
 ## Overview
 
